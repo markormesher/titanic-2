@@ -1,0 +1,9 @@
+{
+	"apps": [
+		{
+			"name": "titanic-2",
+			"cwd": ".",
+			"script": "./titanic.js"
+		}
+	]
+}

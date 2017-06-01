@@ -1,0 +1,32 @@
+block variables
+
+- _ = _ || {}
+- locals.messages.data = locals.messages.data || {}
+
+doctype html
+html
+	head
+		if _.title
+			title #{title} :: Titanic
+		else
+			title Titanic
+
+		link(rel = 'stylesheet', href = '/vendor/toastr/toastr.css')
+		link(rel = 'stylesheet', href = '/shared/tweaks.css')
+		meta(name = 'viewport', content = 'width=device-width, initial-scale=1')
+		block head
+
+	body
+
+		block body
+
+		pre= JSON.stringify(locals.user, null, 4)
+
+		script(src = '/vendor/jquery/jquery-3.2.1.min.js')
+		script(src = '/vendor/jquery-validate/jquery-validate-1.15.0.min.js')
+		script(src = '/vendor/toastr/toastr.js')
+
+		script(type = 'text/javascript') window.toastrMessages = !{JSON.stringify(locals.messages || [])};
+		script(src = '/shared/toastr-listener.js')
+
+		block scripts
