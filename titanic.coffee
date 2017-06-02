@@ -16,6 +16,12 @@ constants = rfr('./constants.json')
 
 app = express()
 
+# sync DB models
+User = rfr('./models/user')
+User.sync().catch((err) -> throw err)
+UserSetting = rfr('./models/user-setting')
+UserSetting.sync().catch((err) -> throw err)
+
 # form body content
 app.use(bodyParser.urlencoded({ extended: false }));
 

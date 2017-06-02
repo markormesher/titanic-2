@@ -5,7 +5,9 @@ UserManager = rfr("./managers/users")
 module.exports = (passport) ->
 
 	passport.serializeUser((user, callback) ->
+		# no need to store the password
 		delete user["password"]
+
 		callback(null, JSON.stringify(user))
 	)
 
@@ -15,8 +17,6 @@ module.exports = (passport) ->
 		{ passReqToCallback: true }
 		(req, username, password, callback) ->
 			UserManager.getUserForAuth(username, password, (err, user) ->
-				console.log(err)
-				console.log(user)
 				if (err) then return callback(err)
 				if (!user)
 					req.flash("error", "Invalid email/password combination!")

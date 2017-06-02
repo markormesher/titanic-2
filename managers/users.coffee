@@ -1,51 +1,78 @@
 rfr = require("rfr")
-mysql = rfr("./helpers/mysql")
 hashing = rfr("./helpers/hashing")
 constants = rfr("./constants.json")
+User = rfr("./models/user")
+UserSetting = rfr("./models/user-setting")
 
 manager = {
 
 	getUserForAuth: (emailOrId, password, callback) ->
-		query = "SELECT * FROM user WHERE (email = ? OR id = ?) AND password = ? LIMIT 1;"
-		data = [emailOrId, emailOrId, hashing.sha256(password)]
-		mysql.query(query, data, (err, results) ->
-			if (err) then return callback(err)
-			if (results && results.length == 1) then return callback(null, results[0])
-			callback(null, null)
+		User.findOne({
+			where: {
+				$or: {
+					email: emailOrId
+					id: emailOrId
+				}
+				password: hashing.sha256(password)
+			}
+		}).then((user) ->
+			if (user)
+				user.dataValues.emailHash = hashing.md5(user.email.trim().toLowerCase())
+				callback(null, user)
+			else
+				callback('No user found')
+		).catch((error) ->
+			callback(error)
 		)
 
 
 	getUser: (emailOrId, callback) ->
-		query = "SELECT * FROM user WHERE email = ? OR id = ? LIMIT 1;"
-		data = [emailOrId, emailOrId]
-		mysql.query(query, data, (err, results) ->
-			if (err) then return callback(err)
-			if (results && results.length == 1) then return callback(null, results[0])
-			callback(null, null)
+		User.findOne({
+			where: {
+				$or: {
+					email: emailOrId
+					id: emailOrId
+				}
+			}
+		}).then((user) ->
+			if (user)
+				user.dataValues.emailHash = hashing.md5(user.email.trim().toLowerCase())
+				callback(null, user)
+			else
+				callback('No user found')
+		).catch((error) ->
+			callback(error)
 		)
 
 
-	getUserSettings: (userId, callback) ->
+	getUserSettings: (user, callback) ->
 		settings = constants["defaultSettings"]
-		query = "SELECT * FROM setting WHERE user_id = ?;"
-		data = [userId]
-		mysql.query(query, data, (err, results) ->
-			if (err) then return callback(err)
-			for r in results
-				settings[r["setting_key"]] = r["setting_value"]
+		UserSetting.findAll({
+			where: {
+				userId: user.id
+			}
+		}).then((customSettings) ->
+			for c in customSettings
+				settings[c["key"]] = c["value"]
 			settings["__version"] = constants["settingsVersion"]
 			callback(null, settings)
+		).catch((error) ->
+			callback(error)
 		)
 
 
-	setUserSettings: (userId, settings, callback) ->
+	setUserSettings: (user, settings, callback) ->
 		inserts = []
 		for k, v of settings
-			inserts.push([userId, k, v])
+			inserts.push({
+				userId: user.id,
+				key: k,
+				value: v
+			})
 
-		query = "REPLACE INTO setting VALUES ?;"
-		data = [inserts]
-		mysql.query(query, data, callback)
+		UserSetting.bulkCreate(inserts, { updateOnDuplicate: true })
+
+		callback(null)
 }
 
 module.exports = manager
