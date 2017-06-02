@@ -25,9 +25,13 @@ html
 			a.navbar-brand(href="/") Titanic
 			div#navbarCollapse.collapse.navbar-collapse
 				ul.navbar-nav.mr-auto
-					li(class="nav-item " + (_.activePage == 'dashboard' ? 'active' : '')): a.nav-link(href = "/") Dashboard
-					li(class="nav-item " + (_.activePage == 'devices' ? 'active' : '')): a.nav-link(href = "#") Devices
-					li(class="nav-item " + (_.activePage == 'aliases' ? 'active' : '')): a.nav-link(href = "#") Aliases
+					if (locals.user)
+						li(class="nav-item " + (_.activePage == 'dashboard' ? 'active' : '')): a.nav-link(href = "/dashboard") Dashboard
+						li(class="nav-item " + (_.activePage == 'devices' ? 'active' : '')): a.nav-link(href = "#") Devices
+						li(class="nav-item " + (_.activePage == 'aliases' ? 'active' : '')): a.nav-link(href = "#") Aliases
+					else
+						li(class="nav-item " + (_.activePage == 'about' ? 'active' : '')): a.nav-link(href = "/") About
+						li(class="nav-item " + (_.activePage == 'register' ? 'active' : '')): a.nav-link(href = "/auth/register") Register
 
 				ul.navbar-nav.mt-2.mt-md-0
 					if (locals.user)
@@ -47,6 +51,7 @@ html
 
 		script(src = '/vendor/jquery/jquery-3.2.1.min.js')
 		script(src = '/vendor/jquery-validate/jquery-validate-1.15.0.min.js')
+		script(src = '/shared/form-validation.js')
 		script(src = '/vendor/toastr/toastr.js')
 		script(src = '/vendor/bootstrap/bootstrap.min.js')
 

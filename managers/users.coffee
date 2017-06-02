@@ -18,9 +18,7 @@ manager = {
 		}).then((user) ->
 			if (user)
 				user.dataValues.emailHash = hashing.md5(user.email.trim().toLowerCase())
-				callback(null, user)
-			else
-				callback('No user found')
+			callback(null, user)
 		).catch((error) ->
 			callback(error)
 		)
@@ -37,11 +35,31 @@ manager = {
 		}).then((user) ->
 			if (user)
 				user.dataValues.emailHash = hashing.md5(user.email.trim().toLowerCase())
-				callback(null, user)
-			else
-				callback('No user found')
+			callback(null, user)
 		).catch((error) ->
 			callback(error)
+		)
+
+
+	registerUser: (user, callback) ->
+		User.findOne({
+			where: {
+				email: user.email
+			}
+		}).then((duplicateUser) ->
+			if (duplicateUser)
+				callback("duplicate user")
+			else
+				User.create({
+					firstName: user.firstName
+					lastName: user.lastName
+					email: user.email
+					password: hashing.sha256(user.firstPassword)
+				}).then(() ->
+					callback(null)
+				).catch((error) ->
+					callback(error)
+				)
 		)
 
 
