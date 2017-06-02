@@ -91,15 +91,14 @@ app.use((req, res, next) ->
 )
 
 # error handler
-app.use((error, req, res) ->
+app.use((error, req, res, next) ->
 	res.status(error.status || 500)
 	res.render('core/error', {
 		_: {
 			title: error.status + ': ' + error.message
 		}
-		message: error.message
 		status: error.status || 500
-		error: if app.get('env') == 'development' then error
+		error: if app.get('env') == 'development' then error else { incidentId: require("uuid").v1() }
 	})
 )
 

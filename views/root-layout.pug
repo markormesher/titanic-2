@@ -7,10 +7,11 @@ doctype html
 html
 	head
 		if _.title
-			title #{title} :: Titanic
+			title #{_.title} :: Titanic
 		else
 			title Titanic
 
+		link(rel = 'stylesheet', href = '/vendor/bootstrap/bootstrap.min.css')
 		link(rel = 'stylesheet', href = '/vendor/toastr/toastr.css')
 		link(rel = 'stylesheet', href = '/shared/tweaks.css')
 		meta(name = 'viewport', content = 'width=device-width, initial-scale=1')
@@ -18,13 +19,36 @@ html
 
 	body
 
-		block body
+		nav.navbar.navbar-toggleable-md.navbar-light.fixed-top.bg-faded
+			button.navbar-toggler.navbar-toggler-right(type="button", data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation")
+				span.navbar-toggler-icon
+			a.navbar-brand(href="/") Titanic
+			div#navbarCollapse.collapse.navbar-collapse
+				ul.navbar-nav.mr-auto
+					li(class="nav-item " + (_.activePage == 'dashboard' ? 'active' : '')): a.nav-link(href = "/") Dashboard
+					li(class="nav-item " + (_.activePage == 'devices' ? 'active' : '')): a.nav-link(href = "#") Devices
+					li(class="nav-item " + (_.activePage == 'aliases' ? 'active' : '')): a.nav-link(href = "#") Aliases
 
-		pre= JSON.stringify(locals.user, null, 4)
+				ul.navbar-nav.mt-2.mt-md-0
+					if (locals.user)
+						li.nav-item.user-profile.dropdown
+							a#profileDropdown.nav-link.dropdown-toggle(href="#", data-toggle="dropdown")
+								img(src='//www.gravatar.com/avatar/' + locals.user.emailHash + '?r=pg&d=identicon')
+								| #{locals.user.firstName} #{locals.user.lastName}
+							div.dropdown-menu(aria-labelledby="profileDropdown")
+								a.dropdown-item(href = "/auth/logout") Logout
+								a.dropdown-item(href = "#") Profile
+					else
+						li.nav-item: a.btn.btn-outline-success(href = "/auth/login") Login
+
+
+		div.container
+			block body
 
 		script(src = '/vendor/jquery/jquery-3.2.1.min.js')
 		script(src = '/vendor/jquery-validate/jquery-validate-1.15.0.min.js')
 		script(src = '/vendor/toastr/toastr.js')
+		script(src = '/vendor/bootstrap/bootstrap.min.js')
 
 		script(type = 'text/javascript') window.toastrMessages = !{JSON.stringify(locals.messages || [])};
 		script(src = '/shared/toastr-listener.js')

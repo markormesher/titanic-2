@@ -1,4 +1,11 @@
 extends ../root-layout
 
 block body
-	p Error
+	div.row.page-header: div.col-xs-12
+		h1 Error: #{status}
+
+	div.row: div.col-xs-12
+
+		p: a(href="/") Back to the main site.
+
+		pre= JSON.stringify(error, null, 4)
