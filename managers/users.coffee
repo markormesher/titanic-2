@@ -43,29 +43,50 @@ manager = {
 
 
 	registerUser: (user, callback) ->
-		User.findOne({
-			where: {
-				email: user.email
-			}
-		}).then((duplicateUser) ->
-			if (duplicateUser)
-				callback("duplicate user")
+
+		validate = (user, callback) ->
+			errors = []
+			if (!validation.User.firstName(user["firstName"])) then errors.push("invalid first name")
+			if (!validation.User.lastName(user["lastName"])) then errors.push("invalid last name")
+			if (!validation.User.email(user["email"])) then errors.push("invalid email")
+			if (!validation.User.password(user["firstPassword"])) then errors.push("invalid password")
+			if (user["firstPassword"] != user["secondPassword"]) then errors.push("mismatched passwords")
+
+			if (errors.length)
+				callback(errors)
 			else
-				User.create({
-					firstName: user.firstName
-					lastName: user.lastName
-					email: user.email
-					password: hashing.sha256(user.firstPassword)
-				}).then(() ->
-					callback(null)
-				).catch((error) ->
-					callback(error)
-				)
-		)
+				validateUniqueEmail(user, callback)
+
+		validateUniqueEmail = (user, callback) ->
+			User.findOne({
+				where: {
+					email: user["email"],
+				}
+			}).then((conflict) ->
+				if (conflict)
+					callback(["duplicate email"])
+				else
+					doRegister(user, callback)
+			).catch((error) ->
+				callback(error)
+			)
+
+		doRegister = (user, callback) ->
+			User.create({
+				firstName: user["firstName"]
+				lastName: user["lastName"]
+				email: user["email"]
+				password: hashing.sha256(user["firstPassword"])
+			}).then(() ->
+				callback(null)
+			).catch((error) ->
+				callback(error)
+			)
+
+		validate(user, callback)
 
 
 	saveUser: (user, updatedUser, callback) ->
-		# nested function calls: validate -> validateEmailChange -> validatePasswordChange -> doUpdate
 
 		validate = (user, updatedUser, callback) ->
 			errors = []
@@ -79,9 +100,9 @@ manager = {
 			if (errors.length)
 				callback(errors)
 			else
-				validateEmailChange(user, updatedUser, callback)
+				validateUniqueEmail(user, updatedUser, callback)
 
-		validateEmailChange = (user, updatedUser, callback) ->
+		validateUniqueEmail = (user, updatedUser, callback) ->
 			User.findOne({
 				where: {
 					email: updatedUser["email"],
@@ -132,7 +153,6 @@ manager = {
 				callback(error)
 			)
 
-		# start the call chain
 		validate(user, updatedUser, callback)
 
 

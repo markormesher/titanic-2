@@ -25,7 +25,6 @@ router.post("/profile", auth.checkAndRefuse, (req, res, next) ->
 			)
 
 		else
-			console.log(errors)
 			if (errors instanceof Array)
 				for err in errors
 					switch (err)
@@ -36,7 +35,9 @@ router.post("/profile", auth.checkAndRefuse, (req, res, next) ->
 						when "invalid password" then req.flash("error", "Your new password is not valid.")
 						when "mismatched passwords" then req.flash("error", "Your new passwords did not match.")
 						when "bad password" then req.flash("error", "You current password was not correct.")
-						else return next(err)
+						else
+							return next(err)
+
 				res.redirect("/users/profile")
 
 			else
