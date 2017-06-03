@@ -3,6 +3,7 @@ hashing = rfr("./helpers/hashing")
 constants = rfr("./constants.json")
 User = rfr("./models/user")
 UserSetting = rfr("./models/user-setting")
+validation = rfr("./helpers/validation")
 
 manager = {
 
@@ -64,7 +65,51 @@ manager = {
 
 
 	saveUser: (user, updatedUser, callback) ->
-		# nested function calls: validateEmailChange -> validatePasswordChange -> doUpdate
+		# nested function calls: validate -> validateEmailChange -> validatePasswordChange -> doUpdate
+
+		validate = (user, updatedUser, callback) ->
+			errors = []
+			if (!validation.User.firstName(updatedUser["firstName"])) then errors.push("invalid first name")
+			if (!validation.User.lastName(updatedUser["lastName"])) then errors.push("invalid last name")
+			if (!validation.User.email(updatedUser["email"])) then errors.push("invalid email")
+			if (updatedUser["currentPassword"] || updatedUser["firstNewPassword"] || updatedUser["secondNewPassword"])
+				if (!validation.User.password(updatedUser["firstNewPassword"])) then errors.push("invalid password")
+				if (updatedUser["firstNewPassword"] != updatedUser["secondNewPassword"]) then errors.push("mismatched passwords")
+
+			if (errors.length)
+				callback(errors)
+			else
+				validateEmailChange(user, updatedUser, callback)
+
+		validateEmailChange = (user, updatedUser, callback) ->
+			User.findOne({
+				where: {
+					email: updatedUser["email"],
+					$not: {
+						id: user.id
+					}
+				}
+			}).then((conflict) ->
+				if (conflict)
+					callback(["duplicate email"])
+				else
+					validatePasswordChange(user, updatedUser, callback)
+			).catch((error) ->
+				callback(error)
+			)
+
+		validatePasswordChange = (user, updatedUser, callback) ->
+			# if the current password is set, authenticate it before trying the update
+			if (updatedUser["currentPassword"] || updatedUser["firstNewPassword"] || updatedUser["secondNewPassword"])
+				manager.getUserForAuth(user.id, updatedUser["currentPassword"], (err, foundUser) ->
+					if (err) then return callback(err)
+					if (!foundUser)
+						callback(["bad password"])
+					else
+						doUpdate(user, updatedUser, updatedUser["firstNewPassword"], callback)
+				)
+			else
+				doUpdate(user, updatedUser, null, callback)
 
 		doUpdate = (user, updatedUser, newPassword, callback) ->
 			updates = {}
@@ -87,41 +132,8 @@ manager = {
 				callback(error)
 			)
 
-		validatePasswordChange = (user, updatedUser, callback) ->
-			# if the current password is set, authenticate it before trying the update
-			if (updatedUser["currentPassword"] || updatedUser["firstNewPassword"] || updatedUser["secondNewPassword"])
-				if (updatedUser["firstNewPassword"] != updatedUser["secondNewPassword"] || updatedUser["firstNewPassword"].length < 8)
-					return callback("invalid password")
-
-				manager.getUserForAuth(user.id, updatedUser["currentPassword"], (err, foundUser) ->
-					if (err) then return callback(err)
-					if (!foundUser)
-						callback("bad password")
-					else
-						doUpdate(user, updatedUser, updatedUser["firstNewPassword"], callback)
-				)
-			else
-				doUpdate(user, updatedUser, null, callback)
-
-		validateEmailChange = (user, updatedUser, callback) ->
-			User.findOne({
-				where: {
-					email: updatedUser["email"],
-					$not: {
-						id: user.id
-					}
-				}
-			}).then((conflict) ->
-				if (conflict)
-					callback("duplicate email")
-				else
-					validatePasswordChange(user, updatedUser, callback)
-			).catch((error) ->
-				callback(error)
-			)
-
 		# start the call chain
-		validateEmailChange(user, updatedUser, callback)
+		validate(user, updatedUser, callback)
 
 
 	getUserSettings: (user, callback) ->

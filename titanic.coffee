@@ -94,13 +94,21 @@ app.use((req, res, next) ->
 
 # error handler
 app.use((error, req, res, next) ->
+	visibleError = {}
+	if app.get('env') == 'development'
+		Object.getOwnPropertyNames(error).forEach((key) -> visibleError[key] = error[key])
+		if (visibleError["stack"])
+			visibleError["stack"] = visibleError["stack"].split("\n").map((line) -> line.trim())
+	else
+		visibleError = { incidentId: require("uuid").v1() }
+
 	res.status(error.status || 500)
 	res.render('core/error', {
 		_: {
-			title: error.status + ': ' + error.message
+			title: "Error"
 		}
 		status: error.status || 500
-		error: if app.get('env') == 'development' then error else { incidentId: require("uuid").v1() }
+		error: visibleError
 	})
 )
 

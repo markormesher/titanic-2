@@ -28,11 +28,11 @@ block body
 
 				div.form-group
 					label(for="firstNewPassword") New Password
-					input#firstNewPassword.form-control(type="password", name="firstNewPassword")
+					input#firstNewPassword.form-control(type="password", name="firstNewPassword", data-rule-minLength=8)
 
 				div.form-group
 					label(for="secondNewPassword") Repeat New Password
-					input#secondNewPassword.form-control(type="password", name="secondNewPassword", data-rule-equalTo="#firstNewPassword")
+					input#secondNewPassword.form-control(type="password", name="secondNewPassword", data-rule-minLength=8, data-rule-equalTo="#firstNewPassword")
 
 			div.col-12
 				div.form-group
