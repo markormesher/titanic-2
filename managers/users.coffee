@@ -63,6 +63,67 @@ manager = {
 		)
 
 
+	saveUser: (user, updatedUser, callback) ->
+		# nested function calls: validateEmailChange -> validatePasswordChange -> doUpdate
+
+		doUpdate = (user, updatedUser, newPassword, callback) ->
+			updates = {}
+			updates["firstName"] = updatedUser["firstName"]
+			updates["lastName"] = updatedUser["lastName"]
+			updates["email"] = updatedUser["email"]
+			if (newPassword)
+				updates["password"] = hashing.sha256(newPassword)
+
+			User.update(updates, {
+				where: {
+					id: user.id
+				}
+			}).then(() ->
+				manager.getUser(user.id, (err, newUser) ->
+					if (err) then return callback(err)
+					callback(null, newUser)
+				)
+			).catch((error) ->
+				callback(error)
+			)
+
+		validatePasswordChange = (user, updatedUser, callback) ->
+			# if the current password is set, authenticate it before trying the update
+			if (updatedUser["currentPassword"] || updatedUser["firstNewPassword"] || updatedUser["secondNewPassword"])
+				if (updatedUser["firstNewPassword"] != updatedUser["secondNewPassword"] || updatedUser["firstNewPassword"].length < 8)
+					return callback("invalid password")
+
+				manager.getUserForAuth(user.id, updatedUser["currentPassword"], (err, foundUser) ->
+					if (err) then return callback(err)
+					if (!foundUser)
+						callback("bad password")
+					else
+						doUpdate(user, updatedUser, updatedUser["firstNewPassword"], callback)
+				)
+			else
+				doUpdate(user, updatedUser, null, callback)
+
+		validateEmailChange = (user, updatedUser, callback) ->
+			User.findOne({
+				where: {
+					email: updatedUser["email"],
+					$not: {
+						id: user.id
+					}
+				}
+			}).then((conflict) ->
+				if (conflict)
+					callback("duplicate email")
+				else
+					validatePasswordChange(user, updatedUser, callback)
+			).catch((error) ->
+				callback(error)
+			)
+
+		# start the call chain
+		validateEmailChange(user, updatedUser, callback)
+
+
 	getUserSettings: (user, callback) ->
 		settings = constants["defaultSettings"]
 		UserSetting.findAll({

@@ -13,6 +13,7 @@ html
 
 		link(rel = 'stylesheet', href = '/vendor/bootstrap/bootstrap.min.css')
 		link(rel = 'stylesheet', href = '/vendor/toastr/toastr.css')
+		link(rel = 'stylesheet', href = '/vendor/font-awesome/font-awesome.min.css')
 		link(rel = 'stylesheet', href = '/shared/tweaks.css')
 		meta(name = 'viewport', content = 'width=device-width, initial-scale=1')
 		block head
@@ -40,8 +41,18 @@ html
 								img(src='//www.gravatar.com/avatar/' + locals.user.emailHash + '?r=pg&d=identicon')
 								| #{locals.user.firstName} #{locals.user.lastName}
 							div.dropdown-menu(aria-labelledby="profileDropdown")
-								a.dropdown-item(href = "/auth/logout") Logout
-								a.dropdown-item(href = "#") Profile
+								a.dropdown-item(href = "/users/profile")
+									i.fa.fa-fw.fa-user
+									| Edit Profile
+								a.dropdown-item(href = "#")
+									i.fa.fa-fw.fa-key
+									| API Tokens
+
+								div.dropdown-divider
+
+								a.dropdown-item(href = "/auth/logout")
+									i.fa.fa-fw.fa-sign-out
+									| Logout
 					else
 						li.nav-item: a.btn.btn-outline-success(href = "/auth/login") Login
 

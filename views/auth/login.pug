@@ -16,4 +16,9 @@ block body
 				input#password.form-control(type="password", name="password")
 
 			div.form-group
-				button.btn.btn-primary(type = "submit") Login
+				button.btn.btn-primary(type = "submit")
+					i.fa.fa-fw.fa-sign-in
+					| Login
+
+			div.form-group
+				p No account? #[a(href="/auth/register") Register here].

@@ -75,6 +75,7 @@ app.locals.constants = constants
 app.use('/', rfr('./controllers/core'))
 app.use('/auth', rfr('./controllers/auth'))
 app.use('/dashboard', rfr('./controllers/dashboard'))
+app.use('/users', rfr('./controllers/users'))
 
 # favicon be-gone!
 app.use('/favicon.ico', (req, res) -> res.end())
