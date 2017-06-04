@@ -1,0 +1,17 @@
+extends ../root-layout
+
+block body
+
+	div.row.page-title: div.col-12
+		h1 Revoke API Key
+
+	div.row: div.col-12
+		p Are you sure you want to revoke #[em #{key.name}]? #[strong This can never be undone].
+
+		p.btn-group
+			a.btn.btn-outline-success(href="/api-keys")
+				i.fa.fa-fw.fa-arrow-left
+				| No - take me back
+			a.btn.btn-outline-danger(href="/api-keys/confirm-revoke/" + keyId)
+				i.fa.fa-fw.fa-trash
+				| Yes - delete it forever

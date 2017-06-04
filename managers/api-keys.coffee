@@ -7,10 +7,26 @@ ApiKey = rfr("./models/api-key")
 manager = {
 
 	getKeys: (owner, callback) ->
-		ApiKey.findAll({ where: {
-			owner: owner.id
-		}}).then((results) ->
+		ApiKey.findAll({
+			where: {
+				owner: owner.id
+			}
+			order: [
+				["name", "ASC"]
+			]
+		}).then((results) ->
 			callback(null, results)
+		).catch((error) ->
+			callback(error)
+		)
+
+
+	getKey: (owner, id, callback) ->
+		ApiKey.findOne({ where: {
+			id: id
+			owner: owner.id
+		} }).then((device) ->
+			callback(null, device)
 		).catch((error) ->
 			callback(error)
 		)
@@ -59,6 +75,33 @@ manager = {
 			)
 
 		validate()
+
+
+	revokeKey: (owner, id, callback) ->
+
+		checkOwnership = () ->
+			ApiKey.findOne({ where: {
+				id: id
+				owner: owner.id
+			} }).then((result) ->
+				if (result)
+					doDelete()
+				else
+					callback(new Error("No such key"))
+			).catch((error) ->
+				callback(error)
+			)
+
+		doDelete = () ->
+			ApiKey.destroy({ where: {
+				id: id
+			} }).then(() ->
+				callback(null)
+			).catch((error) ->
+				callback(error)
+			)
+
+		checkOwnership()
 }
 
 module.exports = manager

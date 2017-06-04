@@ -62,4 +62,34 @@ router.post("/create", auth.checkAndRefuse, (req, res, next) ->
 	)
 )
 
+router.get("/revoke/:keyId", auth.checkAndRefuse, (req, res, next) ->
+	keyId = req.params["keyId"]
+
+	ApiKeyManager.getKey(res.locals.user, keyId, (error, key) ->
+		if (error)
+			next(error)
+		else
+			res.render("api-keys/revoke", {
+				_: {
+					title: "Revoke API Key"
+					activePage: "api-keys"
+				}
+				key: key
+				keyId: keyId
+			})
+	)
+)
+
+router.get("/confirm-revoke/:keyId", auth.checkAndRefuse, (req, res, next) ->
+	keyId = req.params["keyId"]
+
+	ApiKeyManager.revokeKey(res.locals.user, keyId, (error) ->
+		if (error)
+			next(error)
+		else
+			req.flash("success", "API key revoked.")
+			res.redirect("/api-keys")
+	)
+)
+
 module.exports = router
