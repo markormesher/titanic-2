@@ -16,8 +16,8 @@ constants = rfr('./constants.json')
 
 app = express()
 
-# sync DB models
-for model in ["device", "user", "user-setting"]
+# sync DB models (note: order must reflect FK dependencies)
+for model in ["user", "user-setting", "device", "connection"]
 	rfr("./models/#{model}").sync().catch((err) -> throw err)
 
 # form body content

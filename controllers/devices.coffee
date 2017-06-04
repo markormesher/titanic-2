@@ -1,7 +1,9 @@
+async = require("async")
 rfr = require("rfr")
 auth = rfr("./helpers/auth")
 express = require("express")
 DeviceManager = rfr("./managers/devices")
+ConnectionManager = rfr("./managers/connections")
 
 router = express.Router()
 
@@ -107,6 +109,54 @@ router.get("/confirm-delete/:deviceId", auth.checkAndRefuse, (req, res, next) ->
 		if (error)
 			next(error)
 		else
+			req.flash("success", "Device deleted.")
+			res.redirect("/devices")
+	)
+)
+
+router.get("/connections/:deviceId", auth.checkAndRefuse, (req, res, next) ->
+	deviceId = req.params["deviceId"]
+
+	async.parallel({
+		device: (cb) -> DeviceManager.getDevice(res.locals.user, deviceId, cb)
+		deviceList: (cb) -> DeviceManager.getDevices(res.locals.user, cb)
+		connections: (cb) -> ConnectionManager.getConnections(res.locals.user, deviceId, cb)
+	}, (error, results) ->
+		if (error)
+			next(error)
+		else
+			res.render("devices/connections", {
+				_: {
+					title: "Manage Connections"
+					activePage: "devices"
+				}
+				device: results.device
+				deviceId: deviceId
+				deviceList: results.deviceList.filter((d) -> d["id"] != deviceId)
+				connections: results.connections
+			})
+	)
+)
+
+router.post("/connections/:deviceId", auth.checkAndRefuse, (req, res, next) ->
+	deviceId = req.params["deviceId"]
+	connections = req.body
+
+	if (!connections["outgoing"])
+		connections["outgoing"] = []
+	if (!connections["incoming"])
+		connections["incoming"] = []
+
+	if (!Array.isArray(connections["outgoing"]))
+		connections["outgoing"] = [connections["outgoing"]]
+	if (!Array.isArray(connections["incoming"]))
+		connections["incoming"] = [connections["incoming"]]
+
+	ConnectionManager.updateConnections(res.locals.user, deviceId, connections, (error) ->
+		if (error)
+			next(error)
+		else
+			req.flash("success", "Connections saved.")
 			res.redirect("/devices")
 	)
 )

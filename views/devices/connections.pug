@@ -1,0 +1,50 @@
+extends ../root-layout
+
+block body
+
+	div.row.page-title: div.col-12
+		h1 Manage Connections for #[em #{device.name}]
+
+	div.row: div.col-12.alert.alert-info
+		p
+			| Connections are used to create hostname aliases, letting you specify a machine name instead of an IP address when working with commands like #[code ssh] and #[code scp].
+			| Outgoing connections will create an alias on #[em #{device.name}] for the selected machines; incoming connections will create an alias on the selected machines for #[em #{device.name}].
+
+	if (!deviceList || deviceList.length == 0)
+		div.row: div.col-12
+			div.alert.alert-danger: p There are no other devices to create connections with.
+
+			p: a.btn.btn-outline-success(href="/devices")
+				i.fa.fa-fw.fa-arrow-left
+				| Back to device list
+
+	else
+		form(action="/devices/connections/" + deviceId, method="post")
+			div.row
+				div.col-12.col-md-6
+					h3
+						i.fa.fa-fw.fa-sign-out.text-muted
+						| Outgoing Connections
+
+					fieldset.form-group
+						for dev in deviceList
+							div.form-check: label.form-check-label
+								input.form-check-input(type="checkbox", name="outgoing", value=dev["id"], checked=connections["outgoing"].indexOf(dev["id"]) >= 0)
+								|  #{dev.name}
+
+				div.col-12.col-md-6
+					h3
+						i.fa.fa-fw.fa-sign-in.text-muted
+						| Incoming Connections
+					
+					fieldset.form-group
+						for dev in deviceList
+							div.form-check: label.form-check-label
+								input.form-check-input(type="checkbox", name="incoming", value=dev["id"], checked=connections["incoming"].indexOf(dev["id"]) >= 0)
+								|  #{dev.name}
+
+			div.row: div.col-12
+				div.form-group
+					button.btn.btn-primary(type = "submit")
+						i.fa.fa-fw.fa-save
+						| Save

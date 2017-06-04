@@ -23,7 +23,7 @@ block body
 
 	div.row: div.col-12
 		if (!devices || devices.length == 0)
-			div.alert.alert-info You have not created any devices.
+			div.alert.alert-info: p You have not created any devices.
 		else
 			for dev in devices
 				div.device-row
@@ -34,6 +34,9 @@ block body
 						br
 						span= dev.ipAddress
 					p.buttons.btn-group
+						a.btn.btn-outline-info(href="/devices/connections/" + dev.id)
+							i.fa.fa-fw.fa-share-alt
+							| Manage Connections
 						a.btn.btn-outline-warning(href="/devices/edit/" + dev.id)
 							i.fa.fa-fw.fa-edit
 							| Edit

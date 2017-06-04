@@ -1,6 +1,7 @@
 rfr = require("rfr")
 validation = rfr("./helpers/validation")
 Device = rfr("./models/device")
+Connection = rfr("./models/connection")
 
 manager = {
 
@@ -101,9 +102,21 @@ manager = {
 				active: true
 			} }).then((result) ->
 				if (result)
-					doDelete()
+					clearOldConnections()
 				else
 					callback(new Error("No such device"))
+			).catch((error) ->
+				callback(error)
+			)
+
+		clearOldConnections = () ->
+			Connection.destroy({ where: {
+				$or: {
+					fromDevice: id
+					toDevice: id
+				}
+			} }).then(() ->
+				doDelete()
 			).catch((error) ->
 				callback(error)
 			)
