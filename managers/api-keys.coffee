@@ -102,6 +102,31 @@ manager = {
 			)
 
 		checkOwnership()
+
+
+	validateKey: (key, callback) ->
+		console.log(key)
+
+		# basic format validation
+		if (typeof key != typeof "") then return callback("invalid key")
+		key = key.trim()
+		if (key.length != 64) then return callback("invalid key")
+
+		# break up id and secret
+		keyId = key[0..7] + "-" + key[8..11] + "-" + key[12..15] + "-" + key[16..19] + "-" + key[20..31]
+		keySecret = key[32..63]
+
+		ApiKey.findOne({ where: {
+			id: keyId
+			secret: hashing.sha512(keySecret)
+		} }).then((result) ->
+			if (!result)
+				callback("key does not exist")
+			else
+				callback(null, result["owner"])
+		).catch((error) ->
+			callback(error)
+		)
 }
 
 module.exports = manager

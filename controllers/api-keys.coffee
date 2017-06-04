@@ -92,4 +92,16 @@ router.get("/confirm-revoke/:keyId", auth.checkAndRefuse, (req, res, next) ->
 	)
 )
 
+# TODO: not permanent
+router.get("/try/:key", auth.checkAndRefuse, (req, res, next) ->
+	key = req.params["key"]
+
+	ApiKeyManager.validateKey(key, (error, userId) ->
+		if (error)
+			res.send(error)
+		else
+			res.send(userId)
+	)
+)
+
 module.exports = router
