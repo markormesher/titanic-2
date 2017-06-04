@@ -8,6 +8,7 @@ manager = {
 		Device.findAll({
 			where: {
 				owner: owner.id
+				active: true
 			}
 			order: [
 				["name", "ASC"]
@@ -25,6 +26,7 @@ manager = {
 		Device.findOne({ where: {
 			id: id
 			owner: owner.id
+			active: true
 		} }).then((device) ->
 			callback(null, device)
 		).catch((error) ->
@@ -61,27 +63,25 @@ manager = {
 				)
 
 		checkUniqueName = () ->
-			if (!id || id == "0")
-				doSave()
-			else
-				Device.findOne({ where: {
-					owner: owner.id
-					name: device["name"]
-					$not: { id: id }
-				} }).then((conflict) ->
-					if (conflict)
-						callback(["duplicate name"])
-					else
-						doSave()
-				).catch((error) ->
-					callback(error)
-				)
+			Device.findOne({ where: {
+				owner: owner.id
+				name: device["name"]
+				$not: { id: id }
+			} }).then((conflict) ->
+				if (conflict)
+					callback(["duplicate name"])
+				else
+					doSave()
+			).catch((error) ->
+				callback(error)
+			)
 
 		doSave = () ->
 			if (id && id != "0")
 				device["id"] = id
 
 			device["owner"] = owner.id
+			device["active"] = true
 
 			Device.upsert(device).then(() ->
 				callback(null)
@@ -90,6 +90,35 @@ manager = {
 			)
 
 		validate()
+
+
+	deleteDevice: (owner, id, callback) ->
+
+		checkOwnership = () ->
+			Device.findOne({ where: {
+				id: id
+				owner: owner.id
+				active: true
+			} }).then((result) ->
+				if (result)
+					doDelete()
+				else
+					callback(new Error("No such device"))
+			).catch((error) ->
+				callback(error)
+			)
+
+		doDelete = () ->
+			Device.update({ active: false }, { where: {
+				id: id
+			} }).then(() ->
+				callback(null)
+			).catch((error) ->
+				callback(error)
+			)
+
+		checkOwnership()
+
 }
 
 module.exports = manager

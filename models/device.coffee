@@ -30,4 +30,9 @@ module.exports = db.define("device", {
 		type: Sequelize.ENUM("workstation", "laptop", "server", "mobile", "other")
 		allowNull: false
 	}
+	active: {
+		type: Sequelize.BOOLEAN
+		allowNull: false
+		default: true
+	}
 })

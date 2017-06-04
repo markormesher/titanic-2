@@ -82,4 +82,33 @@ router.post("/edit/:deviceId", auth.checkAndRefuse, (req, res, next) ->
 	)
 )
 
+router.get("/delete/:deviceId", auth.checkAndRefuse, (req, res, next) ->
+	deviceId = req.params["deviceId"]
+
+	DeviceManager.getDevice(res.locals.user, deviceId, (error, device) ->
+		if (error)
+			next(error)
+		else
+			res.render("devices/delete", {
+				_: {
+					title: "Delete Device"
+					activePage: "devices"
+				}
+				device: device
+				deviceId: deviceId
+			})
+	)
+)
+
+router.get("/confirm-delete/:deviceId", auth.checkAndRefuse, (req, res, next) ->
+	deviceId = req.params["deviceId"]
+
+	DeviceManager.deleteDevice(res.locals.user, deviceId, (error) ->
+		if (error)
+			next(error)
+		else
+			res.redirect("/devices")
+	)
+)
+
 module.exports = router

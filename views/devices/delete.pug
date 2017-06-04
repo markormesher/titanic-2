@@ -1,0 +1,17 @@
+extends ../root-layout
+
+block body
+
+	div.row.page-title: div.col-12
+		h1 Delete Device
+
+	div.row: div.col-12
+		p Are you sure you want to delete #[em #{device.name}]?
+
+		p.btn-group
+			a.btn.btn-outline-success(href="/devices")
+				i.fa.fa-fw.fa-times
+				| No - take me back
+			a.btn.btn-outline-danger(href="/devices/confirm-delete/" + deviceId)
+				i.fa.fa-fw.fa-trash
+				| Yes - delete it forever
