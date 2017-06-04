@@ -5,7 +5,7 @@ User = rfr("./models/user")
 
 module.exports = db.define("api_key", {
 	id: {
-		type: Sequelize.STRING(32)
+		type: Sequelize.UUID
 		allowNull: false
 		primaryKey: true
 	}

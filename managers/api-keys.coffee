@@ -42,7 +42,8 @@ manager = {
 
 		doGenerate = () ->
 			# split/join is faster than regex in v8
-			keyId = uuid.v4().split("-").join("")
+			keyId = uuid.v4()
+			keyCleanId = keyId.split("-").join("")
 			keySecret = uuid.v4().split("-").join("")
 			keyHash = hashing.sha512(keySecret)
 
@@ -52,7 +53,7 @@ manager = {
 				name: name
 				secret: keyHash
 			}).then(() ->
-				callback(null, keyId+keySecret)
+				callback(null, keyCleanId + keySecret)
 			).catch((error) ->
 				callback(error)
 			)
