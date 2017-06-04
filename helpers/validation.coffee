@@ -12,7 +12,7 @@ exp = {
 	Device: {
 		name: (data) -> !validator.isEmpty(data)
 		ipAddress: (data) -> validator.isIP(data)
-		group: (data) -> !validator.isEmpty(data)
+		type: (data) -> ["workstation", "laptop", "server", "mobile", "other"].indexOf(data) >= 0
 		type: (data) -> ["workstation", "laptop", "server", "mobile", "other"].indexOf(data) >= 0
 	}
 

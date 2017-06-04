@@ -62,7 +62,6 @@ router.post("/edit/:deviceId", auth.checkAndRefuse, (req, res, next) ->
 					switch (err)
 						when "invalid name" then req.flash("error", "You did not enter a valid device name.")
 						when "invalid ip address" then req.flash("error", "You did not enter a valid IP address.")
-						when "invalid group" then req.flash("error", "You did not enter a valid group.")
 						when "invalid type" then req.flash("error", "You did not select a valid type.")
 						when "duplicate name" then req.flash("error", "The name you entered is already in use.")
 						else

@@ -30,8 +30,4 @@ module.exports = db.define("device", {
 		type: Sequelize.ENUM("workstation", "laptop", "server", "mobile", "other")
 		allowNull: false
 	}
-	group: {
-		type: Sequelize.STRING
-		allowNull: false
-	}
 })

@@ -37,7 +37,6 @@ manager = {
 			errors = []
 			if (!validation.Device.name(device["name"])) then errors.push("invalid name")
 			if (!validation.Device.ipAddress(device["ipAddress"])) then errors.push("invalid ip address")
-			if (!validation.Device.group(device["group"])) then errors.push("invalid group")
 			if (!validation.Device.type(device["type"])) then errors.push("invalid type")
 
 			if (errors.length)
