@@ -7,6 +7,7 @@ router = express.Router()
 router.get("/", auth.checkAndRefuse, (req, res) ->
 	res.render("dashboard/index", {
 		_: {
+			title: "Dashboard"
 			activePage: "dashboard"
 		}
 	})

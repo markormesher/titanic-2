@@ -1,0 +1,42 @@
+extends ../root-layout
+
+block head
+	link(rel = 'stylesheet', href = '/devices/devices.css')
+
+block body
+
+	-
+		icons = {
+			"server": "server",
+			"workstation": "desktop",
+			"laptop": "laptop",
+			"mobile": "mobile",
+			"other": "hdd-0"
+		}
+
+	div.row.page-title
+		div.col-12.col-md-9: h1 Manage Devices
+		div.col-12.col-md-3.text-md-right
+			a.btn.btn-outline-success(href="/devices/edit/0")
+				i.fa.fa-fw.fa-plus
+				| Create Device
+
+	div.row: div.col-12
+		if (!devices || devices.length == 0)
+			div.alert.alert-info You have not created any devices.
+		else
+			for dev in devices
+				div.device-row
+					p.icon
+						i(class="text-muted fa fa-lg fa-fw fa-" + icons[dev.type])
+					p.name
+						| #{dev.name}
+						br
+						span= dev.ipAddress
+					p.buttons.btn-group
+						a.btn.btn-outline-warning(href="/devices/edit/" + dev.id)
+							i.fa.fa-fw.fa-edit
+							| Edit
+						a.btn.btn-outline-danger(href="")
+							i.fa.fa-fw.fa-trash
+							| Delete

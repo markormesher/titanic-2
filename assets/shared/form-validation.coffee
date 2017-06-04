@@ -4,10 +4,8 @@ $('form.validate').validate({
 	errorElement: 'span'
 	errorClass: 'help-block text-danger'
 	errorPlacement: (error, element) ->
-		if (element.parent('.input-group').length)
-			error.insertAfter(element.parent())
-		else if (element.closest('.checkbox-set').length)
-			error.insertAfter(element.closest('.checkbox-set'))
+		if (element.closest('.form-group').length)
+			element.closest('.form-group').append(error)
 		else
 			error.insertAfter(element)
 })

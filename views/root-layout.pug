@@ -28,7 +28,7 @@ html
 				ul.navbar-nav.mr-auto
 					if (locals.user)
 						li(class="nav-item " + (_.activePage == 'dashboard' ? 'active' : '')): a.nav-link(href = "/dashboard") Dashboard
-						li(class="nav-item " + (_.activePage == 'devices' ? 'active' : '')): a.nav-link(href = "#") Devices
+						li(class="nav-item " + (_.activePage == 'devices' ? 'active' : '')): a.nav-link(href = "/devices") Devices
 						li(class="nav-item " + (_.activePage == 'aliases' ? 'active' : '')): a.nav-link(href = "#") Aliases
 					else
 						li(class="nav-item " + (_.activePage == 'about' ? 'active' : '')): a.nav-link(href = "/") About

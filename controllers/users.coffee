@@ -8,6 +8,7 @@ router = express.Router()
 router.get("/profile", auth.checkAndRefuse, (req, res) ->
 	res.render("users/profile", {
 		_: {
+			title: "Edit Your Profile"
 			activePage: "profile"
 		}
 	})

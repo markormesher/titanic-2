@@ -1,0 +1,53 @@
+extends ../root-layout
+
+block body
+
+	- device = device || {}
+	- device.type = device.type || ""
+
+	div.row.page-title: div.col-12
+		if (createMode)
+			h1 Create Device
+		else
+			h1 Edit Device
+
+	form.validate(method = "post", action = "/devices/edit/" + deviceId)
+		div.row
+			div.col-12.col-md-6
+				div.form-group
+					label(for="name") Name
+					input#name.form-control(type="text", name="name", required=true, value=device.name || "")
+
+				div.form-group
+					label(for="ipAddress") IP Address
+					input#ipAddress.form-control(type="text", name="ipAddress", required=true, value=device.ipAddress || "")
+
+				div.form-group
+					label(for="group") Group
+					input#group.form-control(type="text", name="group", required=true, value=device.group || "")
+
+			div.col-12.col-md-6
+				fieldset.form-group
+					label Type
+					div.form-check: label.form-check-label
+						input.form-check-input(type="radio", name="type", value="workstation", required=true, checked=device.type == "workstation")
+						|  Workstation
+					div.form-check: label.form-check-label
+						input.form-check-input(type="radio", name="type", value="laptop", required=true, checked=device.type == "laptop")
+						|  Laptop
+					div.form-check: label.form-check-label
+						input.form-check-input(type="radio", name="type", value="server", required=true, checked=device.type == "server")
+						|  Server
+					div.form-check: label.form-check-label
+						input.form-check-input(type="radio", name="type", value="mobile", required=true, checked=device.type == "mobile")
+						|  Mobile
+					div.form-check: label.form-check-label
+						input.form-check-input(type="radio", name="type", value="other", required=true, checked=device.type == "other")
+						|  Other
+
+			div.col-12
+				div.form-group
+					button.btn.btn-primary(type = "submit")
+						i.fa.fa-fw.fa-save
+						| Save
+

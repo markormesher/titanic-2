@@ -8,15 +8,13 @@ validation = rfr("./helpers/validation")
 manager = {
 
 	getUserForAuth: (emailOrId, password, callback) ->
-		User.findOne({
-			where: {
-				$or: {
-					email: emailOrId
-					id: emailOrId
-				}
-				password: hashing.sha256(password)
+		User.findOne({ where: {
+			$or: {
+				email: emailOrId
+				id: emailOrId
 			}
-		}).then((user) ->
+			password: hashing.sha256(password)
+		} }).then((user) ->
 			if (user)
 				user.dataValues.emailHash = hashing.md5(user.email.trim().toLowerCase())
 			callback(null, user)
@@ -26,14 +24,12 @@ manager = {
 
 
 	getUser: (emailOrId, callback) ->
-		User.findOne({
-			where: {
-				$or: {
-					email: emailOrId
-					id: emailOrId
-				}
+		User.findOne({ where: {
+			$or: {
+				email: emailOrId
+				id: emailOrId
 			}
-		}).then((user) ->
+		} }).then((user) ->
 			if (user)
 				user.dataValues.emailHash = hashing.md5(user.email.trim().toLowerCase())
 			callback(null, user)
@@ -58,11 +54,9 @@ manager = {
 				validateUniqueEmail(user, callback)
 
 		validateUniqueEmail = (user, callback) ->
-			User.findOne({
-				where: {
-					email: user["email"],
-				}
-			}).then((conflict) ->
+			User.findOne({ where: {
+				email: user["email"],
+			} }).then((conflict) ->
 				if (conflict)
 					callback(["duplicate email"])
 				else
@@ -103,14 +97,12 @@ manager = {
 				validateUniqueEmail(user, updatedUser, callback)
 
 		validateUniqueEmail = (user, updatedUser, callback) ->
-			User.findOne({
-				where: {
-					email: updatedUser["email"],
-					$not: {
-						id: user.id
-					}
+			User.findOne({ where: {
+				email: updatedUser["email"],
+				$not: {
+					id: user.id
 				}
-			}).then((conflict) ->
+			} }).then((conflict) ->
 				if (conflict)
 					callback(["duplicate email"])
 				else
@@ -140,11 +132,9 @@ manager = {
 			if (newPassword)
 				updates["password"] = hashing.sha256(newPassword)
 
-			User.update(updates, {
-				where: {
-					id: user.id
-				}
-			}).then(() ->
+			User.update(updates, { where: {
+				id: user.id
+			} }).then(() ->
 				manager.getUser(user.id, (err, newUser) ->
 					if (err) then return callback(err)
 					callback(null, newUser)
@@ -158,11 +148,9 @@ manager = {
 
 	getUserSettings: (user, callback) ->
 		settings = constants["defaultSettings"]
-		UserSetting.findAll({
-			where: {
-				userId: user.id
-			}
-		}).then((customSettings) ->
+		UserSetting.findAll({ where: {
+			userId: user.id
+		} }).then((customSettings) ->
 			for c in customSettings
 				settings[c["key"]] = c["value"]
 			settings["__version"] = constants["settingsVersion"]
@@ -181,9 +169,14 @@ manager = {
 				value: v
 			})
 
-		UserSetting.bulkCreate(inserts, { updateOnDuplicate: true })
+		UserSetting.bulkCreate(inserts, {
+			updateOnDuplicate: true
+		}).then(() ->
+			callback(null)
+		).catch((error) ->
+			callback(error)
+		)
 
-		callback(null)
 }
 
 module.exports = manager

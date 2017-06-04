@@ -17,10 +17,8 @@ constants = rfr('./constants.json')
 app = express()
 
 # sync DB models
-User = rfr('./models/user')
-User.sync().catch((err) -> throw err)
-UserSetting = rfr('./models/user-setting')
-UserSetting.sync().catch((err) -> throw err)
+for model in ["device", "user", "user-setting"]
+	rfr("./models/#{model}").sync().catch((err) -> throw err)
 
 # form body content
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -75,6 +73,7 @@ app.locals.constants = constants
 app.use('/', rfr('./controllers/core'))
 app.use('/auth', rfr('./controllers/auth'))
 app.use('/dashboard', rfr('./controllers/dashboard'))
+app.use('/devices', rfr('./controllers/devices'))
 app.use('/users', rfr('./controllers/users'))
 
 # favicon be-gone!
