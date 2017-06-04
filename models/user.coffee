@@ -22,7 +22,7 @@ module.exports = db.define('user', {
 		allowNull: false
 	}
 	password: {
-		type: Sequelize.STRING(64)
+		type: Sequelize.STRING(128)
 		allowNull: false
 	}
 })

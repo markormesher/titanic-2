@@ -13,7 +13,7 @@ manager = {
 				email: emailOrId
 				id: emailOrId
 			}
-			password: hashing.sha256(password)
+			password: hashing.hashPassword(password)
 		} }).then((user) ->
 			if (user)
 				user.dataValues.emailHash = hashing.md5(user.email.trim().toLowerCase())
@@ -70,7 +70,7 @@ manager = {
 				firstName: user["firstName"]
 				lastName: user["lastName"]
 				email: user["email"]
-				password: hashing.sha256(user["firstPassword"])
+				password: hashing.hashPassword(user["firstPassword"])
 			}).then(() ->
 				callback(null)
 			).catch((error) ->
@@ -130,7 +130,7 @@ manager = {
 			updates["lastName"] = updatedUser["lastName"]
 			updates["email"] = updatedUser["email"]
 			if (newPassword)
-				updates["password"] = hashing.sha256(newPassword)
+				updates["password"] = hashing.hashPassword(newPassword)
 
 			User.update(updates, { where: {
 				id: user.id
