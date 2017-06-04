@@ -27,19 +27,24 @@ block body
 					label Type
 					div.form-check: label.form-check-label
 						input.form-check-input(type="radio", name="type", value="workstation", required=true, checked=device.type == "workstation")
-						|  Workstation
+						i.fa.fa-fw.fa-desktop.text-muted
+						| Workstation
 					div.form-check: label.form-check-label
 						input.form-check-input(type="radio", name="type", value="laptop", required=true, checked=device.type == "laptop")
-						|  Laptop
+						i.fa.fa-fw.fa-laptop.text-muted
+						| Laptop
 					div.form-check: label.form-check-label
 						input.form-check-input(type="radio", name="type", value="server", required=true, checked=device.type == "server")
-						|  Server
+						i.fa.fa-fw.fa-server.text-muted
+						| Server
 					div.form-check: label.form-check-label
 						input.form-check-input(type="radio", name="type", value="mobile", required=true, checked=device.type == "mobile")
-						|  Mobile
+						i.fa.fa-fw.fa-mobile.text-muted
+						| Mobile
 					div.form-check: label.form-check-label
 						input.form-check-input(type="radio", name="type", value="other", required=true, checked=device.type == "other")
-						|  Other
+						i.fa.fa-fw.fa-hdd-o.text-muted
+						| Other
 
 			div.col-12
 				div.form-group
