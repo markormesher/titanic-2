@@ -16,6 +16,10 @@ exp = {
 		type: (data) -> ["workstation", "laptop", "server", "mobile", "other"].indexOf(data) >= 0
 	}
 
+	ApiKey: {
+		name: (data) -> !validator.isEmpty(data)
+	}
+
 }
 
 module.exports = exp

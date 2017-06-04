@@ -1,4 +1,4 @@
-.device-row {
+.api-key-row {
 	padding: 14px 10px;
 	display: flex;
 	align-items: center;
@@ -16,15 +16,18 @@
 		}
 	}
 
-	p.icon {
-		margin-right: 15px;
-	}
-
 	p.buttons {
 		margin-left: auto;
 	}
 }
 
-.device-row:hover {
+.api-key-row:hover {
 	background-color: #fafafa;
+}
+
+code.key-output {
+	display: block;
+	text-align: center;
+	padding: 10px;
+	font-size: 120%;
 }

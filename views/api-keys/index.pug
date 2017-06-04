@@ -1,0 +1,28 @@
+extends ../root-layout
+
+block head
+	link(rel = 'stylesheet', href = '/api-keys/api-keys.css')
+
+block body
+
+	div.row.page-title
+		div.col-12.col-md-9: h1 API Keys
+		div.col-12.col-md-3.text-md-right
+			a.btn.btn-outline-success(href="/api-keys/create")
+				i.fa.fa-fw.fa-plus
+				| Generate Key
+
+	div.row: div.col-12
+		if (!keys || keys.length == 0)
+			div.alert.alert-info: p You have not created any API keys.
+		else
+			for key in keys
+				div.api-key-row
+					p.name
+						| #{key.name}
+						br
+						span Last used: never
+					p.buttons.btn-group
+						a.btn.btn-outline-danger(href="/api-keys/revoke/" + key.id)
+							i.fa.fa-fw.fa-trash
+							| Revoke

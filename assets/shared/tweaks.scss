@@ -21,3 +21,7 @@ div.page-title {
 a i.fa, button i.fa, label i.fa {
 	margin-right: 8px;
 }
+
+div.alert p:only-child {
+	margin-bottom: 0 !important;
+}

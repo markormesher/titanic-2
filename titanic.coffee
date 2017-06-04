@@ -17,7 +17,7 @@ constants = rfr('./constants.json')
 app = express()
 
 # sync DB models (note: order must reflect FK dependencies)
-for model in ["user", "user-setting", "device", "connection"]
+for model in ["user", "user-setting", "api-key", "device", "connection"]
 	rfr("./models/#{model}").sync().catch((err) -> throw err)
 
 # form body content
@@ -71,6 +71,7 @@ app.locals.constants = constants
 
 # routes
 app.use('/', rfr('./controllers/core'))
+app.use('/api-keys', rfr('./controllers/api-keys'))
 app.use('/auth', rfr('./controllers/auth'))
 app.use('/dashboard', rfr('./controllers/dashboard'))
 app.use('/devices', rfr('./controllers/devices'))
