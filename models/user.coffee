@@ -2,7 +2,7 @@ Sequelize = require("sequelize")
 rfr = require("rfr")
 db = rfr("./helpers/db")
 
-module.exports = db.define('user', {
+module.exports = db.define("user", {
 	id: {
 		type: Sequelize.UUID
 		allowNull: false
