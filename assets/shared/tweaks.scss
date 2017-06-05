@@ -1,0 +1,32 @@
+body {
+	min-height: 75rem;
+	padding-top: 4.5rem;
+	font-family: "Lato", sans-serif;
+}
+
+.user-profile img {
+	width: 21px;
+	height: 21px;
+	border-radius: 50%;
+	margin-right: 10px;
+}
+
+div.page-title {
+	margin-bottom: 1rem;
+
+	a.btn, button.btn {
+		margin-top: 7px;
+	}
+}
+
+a i.fa, button i.fa, label i.fa {
+	margin-right: 8px;
+}
+
+div.alert p:only-child {
+	margin-bottom: 0 !important;
+}
+
+.text-muted {
+	opacity: 0.6;
+}

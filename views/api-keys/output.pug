@@ -1,0 +1,18 @@
+extends ../root-layout
+
+block head
+	link(rel="stylesheet", href="/api-keys/api-keys.css")
+
+block body
+
+	div.row.page-title: div.col-12
+		h1 New API Key
+
+	div.row: div.col-12
+		p Your key is below. Copy it to somewhere safe, because #[strong you will not be able to retrieve it again].
+
+		p: code.key-output= key
+
+		p: a.btn.btn-outline-info(href="/api-keys")
+			i.fa.fa-fw.fa-check
+			| Done

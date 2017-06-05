@@ -1,0 +1,40 @@
+extends ../root-layout
+
+block body
+
+	- device = device || {}
+	- device.type = device.type || ""
+
+	div.row.page-title: div.col-12
+		if (createMode)
+			h1 Create Device
+		else
+			h1 Edit Device
+
+	form.validate(method="post", action="/devices/edit/" + deviceId)
+		div.row
+			div.col-12.col-md-6
+				div.form-group
+					label(for="name") Name
+					input#name.form-control(type="text", name="name", required=true, value=device.name || "")
+
+				div.form-group
+					label(for="ipAddress") IP Address
+					input#ipAddress.form-control(type="text", name="ipAddress", required=true, value=device.ipAddress || "")
+
+			div.col-12.col-md-6
+				fieldset.form-group
+					label Icon
+					div.row
+						for icon in icons
+							div.form-check.col-4.col-md-3
+								label.form-check-label
+									input.form-check-input(type="radio", name="icon", value=icon, required=true, checked=device.icon == icon)
+									i(class="icon fa fa-fw fa-3x fa-" + icon)
+
+			div.col-12
+				div.form-group
+					button.btn.btn-primary(type="submit")
+						i.fa.fa-fw.fa-save
+						| Save
+

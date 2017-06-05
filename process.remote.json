@@ -1,0 +1,9 @@
+{
+	"apps": [
+		{
+			"name": "titanic-2",
+			"cwd": "/var/node/titanic-2.markormesher.co.uk/",
+			"script": "./titanic.js"
+		}
+	]
+}

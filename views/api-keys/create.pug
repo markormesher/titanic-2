@@ -1,0 +1,20 @@
+extends ../root-layout
+
+block body
+
+	div.row.page-title: div.col-12
+		h1 Create API Key
+
+	form.validate(method="post", action="/api-keys/create")
+		div.row
+			div.col-12.col-md-6
+				div.form-group
+					label(for="name") Name
+					input#name.form-control(type="text", name="name", required=true, value=name || "")
+					span.small.text-muted This will help you to identify this key later.
+
+			div.col-12
+				div.form-group
+					button.btn.btn-primary(type="submit")
+						i.fa.fa-fw.fa-save
+						| Create

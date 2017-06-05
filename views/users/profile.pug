@@ -1,0 +1,41 @@
+extends ../root-layout
+
+block body
+
+	div.row.page-title: div.col-12
+		h1 Edit Your Profile
+
+	form.validate(method="post", action="/users/profile")
+		div.row
+			div.col-12.col-md-6
+				div.form-group
+					label(for="firstName") First Name
+					input#firstName.form-control(type="text", name="firstName", required=true, value=user.firstName)
+
+				div.form-group
+					label(for="lastName") Last Name
+					input#lastName.form-control(type="text", name="lastName", required=true, value=user.lastName)
+
+				div.form-group
+					label(for="email") Email Address
+					input#email.form-control(type="email", name="email", required=true, value=user.email)
+
+			div.col-12.col-md-6
+				div.form-group
+					label(for="currentPassword") Current Password
+					input#currentPassword.form-control(type="password", name="currentPassword")
+					span.small.text-muted Only required if setting a new password.
+
+				div.form-group
+					label(for="firstNewPassword") New Password
+					input#firstNewPassword.form-control(type="password", name="firstNewPassword", data-rule-minLength=8)
+
+				div.form-group
+					label(for="secondNewPassword") Repeat New Password
+					input#secondNewPassword.form-control(type="password", name="secondNewPassword", data-rule-minLength=8, data-rule-equalTo="#firstNewPassword")
+
+			div.col-12
+				div.form-group
+					button.btn.btn-primary(type="submit")
+						i.fa.fa-fw.fa-save
+						| Update Profile
