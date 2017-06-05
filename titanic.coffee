@@ -17,8 +17,11 @@ constants = rfr("./constants.json")
 app = express()
 
 # sync DB models (note: order must reflect FK dependencies)
-for model in ["user", "user-setting", "api-key", "device", "connection"]
-	rfr("./models/#{model}").sync().catch((err) -> throw err)
+models = ["user", "user-setting", "api-key", "device", "connection"]
+initModel = (i) ->
+	if (i >= models.length) then return
+	rfr("./models/#{models[i]}").sync().then(() -> initModel(i + 1)).catch((err) -> throw err)
+initModel(0)
 
 # form body content
 app.use(bodyParser.urlencoded({ extended: false }));
