@@ -40,7 +40,7 @@ manager = {
 			errors = []
 			if (!validation.Device.name(device["name"])) then errors.push("invalid name")
 			if (!validation.Device.ipAddress(device["ipAddress"])) then errors.push("invalid ip address")
-			if (!validation.Device.type(device["type"])) then errors.push("invalid type")
+			if (!validation.Device.icon(device["icon"])) then errors.push("invalid icon")
 
 			if (errors.length)
 				callback(errors)

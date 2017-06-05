@@ -4,6 +4,7 @@ auth = rfr("./helpers/auth")
 express = require("express")
 DeviceManager = rfr("./managers/devices")
 ConnectionManager = rfr("./managers/connections")
+constants = rfr("./constants.json")
 
 router = express.Router()
 
@@ -33,6 +34,7 @@ router.get("/edit/:deviceId", auth.checkAndRefuse, (req, res, next) ->
 			createMode: createMode
 			device: device
 			deviceId: deviceId
+			icons: constants["allowedDeviceIcons"]
 		})
 
 	if (createMode)
@@ -64,7 +66,7 @@ router.post("/edit/:deviceId", auth.checkAndRefuse, (req, res, next) ->
 					switch (err)
 						when "invalid name" then req.flash("error", "You did not enter a valid device name.")
 						when "invalid ip address" then req.flash("error", "You did not enter a valid IP address.")
-						when "invalid type" then req.flash("error", "You did not select a valid type.")
+						when "invalid icon" then req.flash("error", "You did not select a valid icon.")
 						when "duplicate name" then req.flash("error", "The name you entered is already in use.")
 						else
 							return next(err)
@@ -77,6 +79,7 @@ router.post("/edit/:deviceId", auth.checkAndRefuse, (req, res, next) ->
 					createMode: createMode
 					device: device
 					deviceId: deviceId
+					icons: constants["allowedDeviceIcons"]
 				})
 
 			else

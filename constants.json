@@ -1,6 +1,8 @@
 {
 	"port": 3004,
 
+	"allowedDeviceIcons": ["desktop", "laptop", "server", "mobile", "cloud", "hdd-o", "files-o", "database"],
+
 	"settingsVersion": 20170601.00,
 	"defaultSettings": {}
 }

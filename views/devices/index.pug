@@ -5,15 +5,6 @@ block head
 
 block body
 
-	-
-		icons = {
-			"server": "server",
-			"workstation": "desktop",
-			"laptop": "laptop",
-			"mobile": "mobile",
-			"other": "hdd-0"
-		}
-
 	div.row.page-title
 		div.col-12.col-md-9: h1 Manage Devices
 		div.col-12.col-md-3.text-md-right
@@ -28,7 +19,7 @@ block body
 			for dev in devices
 				div.device-row
 					p.icon
-						i(class="text-muted fa fa-lg fa-fw fa-" + icons[dev.type])
+						i(class="text-muted fa fa-lg fa-fw fa-" + dev.icon)
 					p.name
 						| #{dev.name}
 						br

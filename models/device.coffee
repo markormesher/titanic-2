@@ -26,8 +26,8 @@ module.exports = db.define("device", {
 		type: Sequelize.STRING
 		allowNull: false
 	}
-	type: {
-		type: Sequelize.ENUM("workstation", "laptop", "server", "mobile", "other")
+	icon: {
+		type: Sequelize.STRING
 		allowNull: false
 	}
 	active: {

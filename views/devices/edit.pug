@@ -24,27 +24,13 @@ block body
 
 			div.col-12.col-md-6
 				fieldset.form-group
-					label Type
-					div.form-check: label.form-check-label
-						input.form-check-input(type="radio", name="type", value="workstation", required=true, checked=device.type == "workstation")
-						i.fa.fa-fw.fa-desktop.text-muted
-						| Workstation
-					div.form-check: label.form-check-label
-						input.form-check-input(type="radio", name="type", value="laptop", required=true, checked=device.type == "laptop")
-						i.fa.fa-fw.fa-laptop.text-muted
-						| Laptop
-					div.form-check: label.form-check-label
-						input.form-check-input(type="radio", name="type", value="server", required=true, checked=device.type == "server")
-						i.fa.fa-fw.fa-server.text-muted
-						| Server
-					div.form-check: label.form-check-label
-						input.form-check-input(type="radio", name="type", value="mobile", required=true, checked=device.type == "mobile")
-						i.fa.fa-fw.fa-mobile.text-muted
-						| Mobile
-					div.form-check: label.form-check-label
-						input.form-check-input(type="radio", name="type", value="other", required=true, checked=device.type == "other")
-						i.fa.fa-fw.fa-hdd-o.text-muted
-						| Other
+					label Icon
+					div.row
+						for icon in icons
+							div.form-check.col-4.col-md-3
+								label.form-check-label
+									input.form-check-input(type="radio", name="icon", value=icon, required=true, checked=device.icon == icon)
+									i(class="icon fa fa-fw fa-3x fa-" + icon)
 
 			div.col-12
 				div.form-group

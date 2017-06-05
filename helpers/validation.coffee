@@ -1,4 +1,6 @@
+rfr = require("rfr")
 validator = require("validator")
+constants = rfr("./constants.json")
 
 exp = {
 
@@ -12,8 +14,7 @@ exp = {
 	Device: {
 		name: (data) -> !validator.isEmpty(data)
 		ipAddress: (data) -> validator.isIP(data)
-		type: (data) -> ["workstation", "laptop", "server", "mobile", "other"].indexOf(data) >= 0
-		type: (data) -> ["workstation", "laptop", "server", "mobile", "other"].indexOf(data) >= 0
+		icon: (data) -> constants["allowedDeviceIcons"].indexOf(data) >= 0
 	}
 
 	ApiKey: {

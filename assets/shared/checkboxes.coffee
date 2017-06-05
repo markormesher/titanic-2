@@ -9,10 +9,16 @@ $(document).ready(() ->
 		input = wrapper.find("input")
 
 		# create icon and fix position
-		icon = $("<i class=\"fa fa-fw\"></i>")
-		label.prepend(icon)
+		customIcon = true
+		icon = wrapper.find(".icon")
+		if (!icon.length)
+			customIcon = false
+			icon = $("<i class=\"fa fa-fw\"></i>")
+			label.prepend(icon)
+			icon.css({ "marginRight": "8px" })
+
+		# remove unused items
 		label.css({ "paddingLeft": 0 })
-		icon.css({ "marginRight": "8px" })
 		input.hide()
 
 		# watch input and mirror state in icon
