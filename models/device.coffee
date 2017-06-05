@@ -8,7 +8,7 @@ module.exports = db.define("device", {
 		type: Sequelize.UUID
 		allowNull: false
 		primaryKey: true
-		defaultValue: Sequelize.UUIDV1
+		defaultValue: Sequelize.UUIDV4
 	}
 	owner: {
 		type: Sequelize.UUID
