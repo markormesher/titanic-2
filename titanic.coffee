@@ -100,7 +100,7 @@ app.use((error, req, res, next) ->
 		if (visibleError["stack"])
 			visibleError["stack"] = visibleError["stack"].split("\n").map((line) -> line.trim())
 	else
-		visibleError = { incidentId: require("uuid").v1() }
+		visibleError = { incidentId: require("uuid").v4() }
 
 	res.status(error.status || 500)
 	res.render("core/error", {
