@@ -19,12 +19,22 @@ manager = {
 					queryConnections()
 				else
 					callback(new Error("No such device"))
-			).catch((error) ->
-				callback(error)
-			)
+			).catch(callback)
 
 		queryConnections = () ->
-			callback(null, {})
+			Connection.findAll({ where: {
+				fromDevice: deviceId
+			} }).then((connections) ->
+				targetDeviceIds = []
+				for c in connections
+					targetDeviceIds.push(c["toDevice"])
+
+				Device.findAll({ where: {
+					id: targetDeviceIds
+				} }).then((devices) ->
+					callback(null, devices)
+				).catch(callback)
+			).catch(callback)
 
 		checkOwnership()
 

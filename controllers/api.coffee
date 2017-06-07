@@ -9,8 +9,8 @@ router.get("/user", auth.checkAndRefuseForApi, (req, res) ->
 	res.json(res.locals.user)
 )
 
-router.post("/connections", auth.checkAndRefuseForApi, (req, res) ->
-	deviceName = req.body["identity"]
+router.get("/connected-devices", auth.checkAndRefuseForApi, (req, res) ->
+	deviceName = req.query["identity"]
 	ApiManager.getOutgoingConnectionsForDevice(res.locals.user, deviceName, (error, data) ->
 		if (error)
 			res.status(400).send(error.message)

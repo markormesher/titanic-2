@@ -9,7 +9,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Added
 * API controller
 * API authentication middleware
-* "current user" route for API
+* "get current user" endpoint for API
+* "get outgoing connections" endpoint for API
 
 ### Changed
 
