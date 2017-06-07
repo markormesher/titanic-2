@@ -4,12 +4,7 @@ UserManager = rfr("./managers/users")
 
 module.exports = (passport) ->
 
-	passport.serializeUser((user, callback) ->
-		# no need to store the password
-		delete user["password"]
-
-		callback(null, JSON.stringify(user))
-	)
+	passport.serializeUser((user, callback) -> callback(null, JSON.stringify(user)))
 
 	passport.deserializeUser((user, callback) -> callback(null, JSON.parse(user)))
 

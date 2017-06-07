@@ -74,6 +74,7 @@ app.locals.constants = constants
 
 # routes
 app.use("/", rfr("./controllers/core"))
+app.use("/api", rfr("./controllers/api"))
 app.use("/api-keys", rfr("./controllers/api-keys"))
 app.use("/auth", rfr("./controllers/auth"))
 app.use("/dashboard", rfr("./controllers/dashboard"))

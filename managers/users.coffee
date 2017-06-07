@@ -17,6 +17,7 @@ manager = {
 		} }).then((user) ->
 			if (user)
 				user.dataValues.emailHash = hashing.md5(user.email.trim().toLowerCase())
+			delete user.dataValues.password
 			callback(null, user)
 		).catch((error) ->
 			callback(error)
@@ -32,6 +33,7 @@ manager = {
 		} }).then((user) ->
 			if (user)
 				user.dataValues.emailHash = hashing.md5(user.email.trim().toLowerCase())
+			delete user.dataValues.password
 			callback(null, user)
 		).catch((error) ->
 			callback(error)
